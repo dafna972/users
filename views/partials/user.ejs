@@ -1,0 +1,12 @@
+<tr>
+    <td><%= username %></td>
+     <% if (admin) { %>
+       <td><%= password %></td>
+       <td class="text-center"><%= useradmin ? "X" : ""%></td>
+    <% } %>
+    <td><%= name %></td>
+    <% if (admin) { %>
+        <td class="text-center" title='delete user' onclick="remove('<%= username %>');"><img src="/images/glyphicons-8-user-remove.png"></img></td>
+    <% } %>
+
+</tr>
