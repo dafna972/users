@@ -90,7 +90,9 @@ module.exports = db => {
         debug(`request: without callback: ${JSON.stringify(args)}`);
         return this.find(...args).exec();
     }
-
+    schema.methods.validPassword=function(password){
+        return password==this.password;
+    };
     // the schema is useless so far
     // we need to create a model using it
     // db.model('User', schema, 'User'); // (model, schema, collection)

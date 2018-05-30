@@ -8,16 +8,16 @@ let debug = require('debug')('lab7:app'); // add using the debugger tool
 let mongoose = require('mongoose');       // add mongoose for MongoDB access
 let session = require('express-session'); // add session management module
 let connectMongo = require('connect-mongo'); // add session store implementation for MongoDB
-
+var passport = require('passport');
 let index = require('./routes/index');
 let users = require('./routes/users');
 let login = require('./routes/login');    // it will be our controller for logging in/out
-
+var flash    = require('connect-flash');
 let app = express();
 
 (async () => {
     let MongoStore = connectMongo(session);
-    let sessConnStr = "mongodb://127.0.0.1/lab7-sessions";
+    let sessConnStr = "mongodb://user:user@yochidafna-shard-00-00-zemea.mongodb.net:27017,yochidafna-shard-00-01-zemea.mongodb.net:27017,yochidafna-shard-00-02-zemea.mongodb.net:27017/test?ssl=true&replicaSet=YochiDafna-shard-0&authSource=admin";
     let sessionConnect = mongoose.createConnection();
     try {
         await sessionConnect.openUri(sessConnStr);
@@ -52,7 +52,11 @@ let app = express();
         cookie: { maxAge: 900000, httpOnly: true, sameSite: true }  // cookie parameters
         // NB: maxAge is used for session object expiry setting in the storage backend as well
     }));
-
+    app.use(passport.initialize());
+    app.use(passport.session()); // persistent login sessions
+    
+    app.use(flash()); // use connect-flash for flash messages stored in session
+    require('./config/passport')(passport);
     app.use(express.static(path.join(__dirname, 'public')));
 
     app.use('/', index);

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../model')("User");
 const debug = require('debug')('lab7:login');
+const passport=require('passport');
 
 router.get('/', async (req, res) => {
     if (req.session.userId === undefined) {
@@ -13,7 +14,7 @@ router.get('/', async (req, res) => {
     else
         res.redirect('/');
 });
-
+/*
 router.post('/', async (req, res) => {
     var session = req.session;
     let user;
@@ -45,6 +46,16 @@ router.post('/', async (req, res) => {
     session.userName = user.name;
     session.count = 0;
     res.redirect(req.session.referer);
+});*/
+router.post('/',passport.authenticate('local-login',{
+ /*   successRedirect:'/users',//req.session.referer,
+    failureRedirect:'/login',//req.session.referer,
+    failureFlash:true
+}));*/
+failureRedirect: '/login'
+}), (req, res) => {
+    dubug("login success");
+    req.session.referer
 });
 
 module.exports = router;
